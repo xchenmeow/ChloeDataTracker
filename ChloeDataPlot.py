@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import datetime
 
 # sleep
-sleepdf = pd.read_csv('Chloe_sleep.csv')
+sleepdf = pd.read_csv('Chloe_sleep_new.csv')
 sleepdf = sleepdf.drop(['Baby','Note'],1)
 sleepdf['Date'], sleepdf['DayTime'] = sleepdf['Time'].str.split(',',1).str
 # formula
@@ -61,12 +61,13 @@ pumpeddf['length'] = pumpeddf['Amount'].apply(lambda x: int(x[:-3])*np.pi/3000)
 fig = plt.figure(1)
 ax = plt.subplot(111, projection='polar')
 fig.add_subplot(ax)
-ax.set_xlim(-200,200)
-ax.set_ylim(-200,200)
+ax.set_xlim(-50,200)
+ax.set_ylim(-50,200)
 ax.set_aspect('equal')
 ax.set_rmax(200)
 ax.set_xticklabels(['6', '3', '0', '21', '18', '15', '12', '9'])
-ax.set_rticks([])  # less radial ticks
+ax.set_yticklabels(['1.5m','3m','4.5m','6m'])  
+ax.set_rlabel_position(135)
 for i in range(1,len(sleepdf.index)):
     theta = np.arange(sleepdf.loc[i,'startpoint'],sleepdf.loc[i,'startpoint']-sleepdf.loc[i,'length'],-0.01)
     r = np.repeat(sleepdf.loc[i,'radius'],int(sleepdf.loc[i,'length']/0.01)+1)
@@ -80,25 +81,25 @@ for i in range(1,len(formuladf.index)):
 for i in range(1,len(pumpeddf.index)):
     theta = np.arange(pumpeddf.loc[i,'startpoint'],pumpeddf.loc[i,'startpoint']-pumpeddf.loc[i,'length'],-0.01)
     r = np.repeat(pumpeddf.loc[i,'radius'],int(pumpeddf.loc[i,'length']/0.01)+1)
-    ax.plot(theta, r, linewidth=2, color='orange', label='pumped' if i==1 else '')
+    ax.plot(theta, r, linewidth=2, color='red', label='pumped' if i==1 else '')
 
 flag1 = 0
 flag2 = 0
 flag3 = 0
 for i in range(1,len(diaperdf.index)):
     if diaperdf.loc[i,'Status'] == 'Wet':
-        ax.scatter(diaperdf.loc[i,'startpoint'], diaperdf.loc[i,'radius'], s=20, color='yellow', \
+        ax.scatter(diaperdf.loc[i,'startpoint'], diaperdf.loc[i,'radius'], s=20, color='orange', \
             label='wet diaper' if flag1==0 else '')
         flag1 = 1
     if diaperdf.loc[i,'Status'] == 'Dirty':
-        ax.scatter(diaperdf.loc[i,'startpoint'], diaperdf.loc[i,'radius'], s=20, color='brown', \
+        ax.scatter(diaperdf.loc[i,'startpoint'], diaperdf.loc[i,'radius'], s=20, color='black', \
             label='dirty diaper' if flag2==0 else '')
         flag2 = 1
     if diaperdf.loc[i,'Status'] == 'Mixed':
-        ax.scatter(diaperdf.loc[i,'startpoint'], diaperdf.loc[i,'radius'], s=20, color='maroon', \
+        ax.scatter(diaperdf.loc[i,'startpoint'], diaperdf.loc[i,'radius'], s=20, color='grey', \
             label='mixed diaper' if flag3==0 else '')
         flag3 = 1
-plt.legend(bbox_to_anchor=(1.25, 0.25))
+plt.legend(bbox_to_anchor=(1.35, 0.3))
 plt.title('first six month of Chloe')
 plt.show()
 
